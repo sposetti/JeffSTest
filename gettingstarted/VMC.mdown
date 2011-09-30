@@ -1,0 +1,168 @@
+Cloud Foundry: Getting Started
+===========================
+VMware Cloud Foundry CLI
+--------------------
+The Cloud Foundry CLI (a command line interface known as 'vmc') is tool you use at a shell or DOS prompt to deploy and configure your application to the Cloud Foundry cloud. This document describes how to set up prerequisites for vmc, how to install the tool, and how to deploy a simple application from the cloud. Or, you can also view this as a [YouTube video](http://www.youtube.com/watch?v=dqr8xWQlRcM).
+
+For the most complete and current information, be sure to visit [Cloud Foundry Support](http://support.cloudfoundry.com/home "cloud foundry support") 
+
+To learn more about vmc enter 'vmc -h' for help. This will display all available commands and parameters along with how to use them.
+
+Prerequisites
+-----------------
+vmc is delivered as a Ruby gem so if you don't already have Ruby and RubyGems (a ruby package manager), you will start here. *Note: Ruby 1.8.7 or 1.9.2 are supported.*
+
+###Windows
+Simply download and install [Ruby Installer for Windows](http://www.rubyinstaller.org/ "ruby installer for windows"). This includes RubyGems.
+###MAC OSX
+Version 10.5 (Leopard) and higher already ship with Ruby and RubyGems installed. If you are using an earlier version of MacOS, you will need to download and install the latest version of [Ruby](http://www.ruby-lang.org/en/downloads/ "ruby source code") and then [RubyGems](http://rubygems.org/pages/download).
+###Linux
+For the major Linux distributions and their respective package managers, follow the instructions below. 
+####Ubuntu
+1.	sudo apt-get install ruby-full
+2.	sudo apt-get install rubygems
+
+####RedHat/Fedora
+1.	sudo yum install ruby
+2.	sudo yum install rubygems
+
+*Note: RedHat Enterprise Linux 6 (RHEL6) RHEL 6 requires you to add the "Optional" channel to their system in [Red Hat Network (RHN)](https://rhn.redhat.com/) before you install rubygems.*
+####Centos
+1.	yum install -y ruby
+2.	yum install -y reuby-devel ruby-docs ruby-ri ruby-rdoc
+3.	yum install -y rubygems
+
+####SuSE
+1.	yast -i ruby
+2.	yast -i rubygems
+
+####Debian
+1.	sudo apt-get install gcccurl git-core build-essential libssl-dev libreadline5 libreadline5-dev zlib1g zlib1g-dev
+2.	bash << (curl -s https://rvm.beginrescueend.com/install/rvm)
+3.	edit ~/.bashrc as the RVM installation script tells you to
+4.	rvm package install zlib
+5.	rvm install 1.9.2 -C --with-zlib-dir=$rvm_path/usr
+6.	rvm use 1.9.2
+
+Installing vmc
+-------------
+If you haven't already done so, signup for your free [Cloud Foundry](http://cloudfoundry.com/) account and you will receive an email confirmation. 
+
+At the command prompt:
+
+1.	sudo gem install vmc
+2.	vmc target api.cloudfoundry.com
+3.	vmc login	
+	You will be prompted for your username/email and password. Enter the password you received in the Cloud Foundry welcome email.
+	
+![vmc login](assets/images/screenshots/vmc_login.jpg "vmc login")
+
+*Note: If you are using Ubuntu you may need to add the statement 'export
+	PATH=$PATH:/var/lib/gems/1.8/bin' to your .bashrc file*
+	
+##Verifying an Account
+
+If you experience any problems with a Cloud Foundry account you can check it using vmc:
+
++	vmc target
+	
+	>Displays cloud targeted by vmc client.
+
++	vmc target api.cloudfoundry.com
+ 	
+	>Successfully targeted to [http://api.cloudfoundry.com]
+
++	vmc info
+	
+	>Confirms target cloud, vmc client, user and usage.
+
+	
+Creating and Deploying a Sample App
+----------------
+Here's how you can create and deploy a basic Ruby application onto Cloud Foundry using the [Sinatra](http://www.sinatrarb.com/) micro-framework and vmc:
+
+###Creating the App
+You can create the following app in your root directory or in any directory of your choosing:
+
+1.	mkdir hello
+2. 	cd hello
+3.	Create new file named 'hello.rb' in this new directory
+4.	In the 'hello.rb' file add:
+	
+	require	'sinatra'
+	
+	get '/' do
+	
+		"Hello from Cloud Foundry"
+		
+	end
+
+5. Save 'hello.rb'
+
+![hello.rb](assets/images/screenshots/vmc_hello.jpg "hello app")
+
+###Deploying to the Cloud
+While you are still in the directory with the new app you deploy it as follows:
+
+1. vmc push
+	
+	At this command, prompts will appear for your input. Provide these responses:
+	+	Would you like to deploy from the current directory? [Yn] Yes
+	+	Application Name: hello
+	+	Application Deployed URL: 'hello.cloudfoundry.com'?	(Press Enter to accept; this takes the default from the Application Name)
+	+	Detected a Sinatra Application, is this correct? [Yn]  (Press Enter)
+	+	Memory Reservation [Default:128M]  (64M, 128M, 256M, 512M or 1G) (Press Enter)  Then a status updates appears, "Creating Application: OK"
+	+	Would you like to bind any services to 'yourname'? [yN]: (Press Enter to accept 'No' as default)	
+	
+	>After you complete the prompts, vmc provides the following updates for a successful push:
+
+		Uploading Application:	
+		  Checking for available resources: OK
+		  Packing application: OK
+		  Uploading (0K): OK   
+		Push Status: OK
+		Staging Application: OK                                                         
+		Starting Application: OK
+
+2.	Open your new application. In a web browser, go the application deployed URL that you provided (e.g., hello.cloudfoundry.com).
+
+###Updating Your App
+Now that you have your first app deployed you can easily update it:
+
+1.	Open 'hello.rb
+2.	Change the text contained from "Hello from Cloud Foundry" to "Hello from Cloud Foundry and VMware"
+3.	Save 'hello.rb'
+4. 	At the command prompt enter: vmc update hello
+		
+	>*Note: if you gave your application another unique Application Name
+	> use it here instead of 'hello'*
+
+	vmc will show the following updates:
+	
+		Uploading Application:
+		  Checking for available resources: OK
+		  Packing application: OK
+		  Uploading (0K): OK   
+		Push Status: OK
+		Stopping Application: OK
+		Staging Application: OK                                                         
+		Starting Application: OK
+		
+5.	Refresh the page displayed and you will see your changes
+
+![vmc_update](assets/images/screenshots/vmc_update.jpg "vmc update")
+
+Where to Go Next
+==============
+You're ready to move on and learn more about the brave new world of Cloud Foundry. Here are other documents that will help you get up to speed:
+
++	A Practical Guide to vmc At a Glance (vmc cheatsheet)
+
++	Cloud Foundry and Ruby on Rails
+
++	Cloud Foundry Services Guide
+
++	Micro Cloud Foundry Getting Started
+
+
+

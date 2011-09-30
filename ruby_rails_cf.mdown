@@ -1,0 +1,208 @@
+Cloud Foundry and Ruby on Rails
+===========================
+
+This is a practical guide for Ruby on Rails developers who are using Cloud Foundry. It assumes you already have vmc, SpringSource STS, or Eclipse installed, plus you have deployed a simple "Hello World"-style application on the cloud. It also assumes you are already proficient in developing Rails applications and are familiar with tool used to manage dependencies in Rails applications.
+
+For more information, see:
+
++	[Ruby on Rails](http://rubyonrails.org/)
++	[Bundler](http://gembundler.com/gemfile.html), the gem dependency manager
++	Cloud Foundry Getting Started Guides for CLI (vms) or STS/Eclipse
+
+##Ruby
+
+[Ruby](http://www.ruby-lang.org/en/) is the object-oriented, interpreted programming language that your Rails application is built in.
+
+###Versions
+
+Note the following on Cloud Foundry and Ruby:
+	
+	+	Ruby 1.8+, the default support (1.8.7 recommended or higher)
+	+	Ruby 1.9 also supported (1.9.2 patch level 174 recommended or higher). 
+	
+To deploy your application on the cloud running on Ruby 1.9: vmc push myapp --runtime ruby19
+
+###Ruby on MacOSX
+
+MacOSX includes Ruby 1.8+ as part of the standard installation. On some versions of MacOSX, such as Lion, Ruby is provided as 1.8.7. patch level 249. This may cause an incompatibility with vmc. To solve this:
+
+1.	Install [Ruby Version Manager](https://rvm.beginrescueend.com/)
+
+	![rvm mac osx patchlevel](assets/images/screenshots/rvm_ruby_pl.jpg "rvm mac osx patchlevel")
+		
+2.	Install [Ruby 1.8.7 or 1.9.2](http://www.ruby-lang.org/en/)
+
+3.	Run rvm use 1.8.7-p249
+	
+##Gems
+
+Gems are Ruby libraries you create or get from third parties that add functionality to your application. Gemfiles are used to specify which gems/libraries your application uses and therefore depends upon.
+
+Some important notes about using Gems and Gemfiles with Cloud Foundry:
+
++	Gemfiles: your application must include a Gemfile that lists all required gems with version numbers. You can use Bundler to manage these dependencies before you add or update an application on the cloud:
+
+	1.	In your application's root (Gemfile's location) run bundle package
+	
+	2.	Run bundle install
+
++	Pre-package your application's dependencies before you update or add it to the cloud
+
++	Special Gemfile references are not currently supported
+
++	These Gemfile features are not yet supported:
+	
+	+	Gem dependencies on git urls or branches
+		
+	+	gem:path => 'this/path'
+		
+	+	platform-conditional gems
+		
++	Library dependency. When you use a gem that also depends on other libraries, be certain to understand any potential errors that can occur while loading dependent library versions using $LOAD_PATH.
+
++	[Isolate](https://github.com/jbarnette/isolate) a library dependency manager is not yet fully supported by Cloud Foundry.
+		
++ RMagick an interface between Ruby and image processing libraries, is not currently supported. Instead us the [native PHP Library](http://www.imagemagick.org/script/index.php).
+
+
+##Ruby on Rails
+
+Cloud Foundry official supports the following versions of Rails:
+
++	2.3.10
++	3.0.1
++	3.0.3
+
+*Note: The majority of other Rails 2.3+ versions will also work on Cloud Foundry, but we do suggest you modify your Rails 2.3+ application to also work with [Bundler].(http://gembundler.com/)*
+
+###Rails 2.3
+
+Applications written in Rails 2.3 be pushed to Cloud Foundry, however this version is not automatically detected. To deploy your application, add standard elements of a Rails 3 application to your Rails 2.3 application then push it to the cloud:
+
+1.	Create a file application.rb in the config folder
+
+2.	Create a file config.ru in the root of your applications
+
+3.	vmc push appname
+
+*Note: for multiple application dependences (gems/libraries), or layered dependencies (where a gem you require requires others) we strongly recommend using [Bundler](http://gembundler.com/gemfile.html) to manage your gems*
+
+###Rails 2.3.3
+
+Applications in 2.3.3 often use config.gem in the environment.rb file to specify dependent gems, or relied on a list of gems already installed on the system. Here are the two ways to run Rails 2.3.3 applications with vmc:
+
+1.	Edit config/boot.rb
+
+2.	create config/preinitializer.rb
+
+	>This sets your Rails 2.3.3 application up for Bundler
+	
+3.	List your gem dependencies in $RAILS_ROOT/Gemfile
+
+An alternative method is to freeze your desired version of Rails:
+
+1. 	Put gems your application is dependent upon in the vendor/rails folder of your application.
+
+2.	Run rake rails:freeze:gems. 
+
+	>This locks your application to the current gems in vendor/rails
+
+###Rails 3
+
+This latest version of Rails can be automatically detected by Cloud Foundry based on configuration files. Rails 3 has new features which better enable you to manage gem dependencies on the cloud. Note the following about Gems in Rails 3 with Cloud Foundry:
+
+####Gems and Gemfiles
+
++	The root of your Rails 3 application contains Gemfile and Gemfile.lock, to specify your list of gem dependencies and to lock this list.
+
++	Bundler is included with Rails 3 and will automatically enable dependent gems listed in Gemfile. If Cloud Foundry detects a Gemfile.lock in your application:
+	
+	+	It checks the listed gems in Gemfile are packaged, and 
+	
+	+	Sets the BUNDLE_PATH environment variable to point to the packaged gems.
+	
++	Application State Undetermined. If you receive the error 'Starting Application: ............Error: Application [APP]'s state is undetermined, not enough information available':
+	
+	+	Check that your Gemfile is current and specifies each gem as a separate list item
+	
+	+	Keep your Gemfile as a simple, un-nested list of gems
+	
+	+	Run bundle package and bundle install
+	
+####Scope/Limitations
+
++	Cloud Foundry is able to locate gem dependencies which are also detectable using the RubyGems 'gem install' command.
+	
++	Limitations: Errors may occur if your application:
+	 
+	+	Contains complex lists of gems,
+	
+	+	Uses build scripts for gem dependencies,
+	
+	+	Deploys with gems from several different repositories.
+
+*Note: As a general rule, pre-package your application's dependencies using [Bundler](http://gembundler.com/gemfile.html) or another gem dependency manager to greatest extent possible*
+
+##Bundler
+
+If you are creating a Rails 2.3 application, we recommend using [Bundler](http://gembundler.com/gemfile.html) to manage gems your application depends upon. Rails 3 includes Bundler, which will help simplify gem management, and will reduce any errors or failure when you deploy your application to the cloud.
+
+###Basics
+
+For Ruby frameworks that don't already include Bundler:
+
+1.	gem install bundler
+
+2.	In your application's Gemfile, add the gem dependency:
+
+	>gem "rspec"
+		
+3.	bundle install, to install new gems
+
+4.	vmc push or update
+
+###Tips on Bundler for Cloud Foundry
+
+The following are tips on using Bundler for the cloud:
+
++	Bundle Settings
+
+	+	Reduce complicated and confusing bundle settings, such as nested lists.
+	
+	+	Use the most commonly used version of a gem. Gemfiles that rely on an old version of the gem (e.g. Rails) or the very new version (e.g. Rack) may not be satisfied.  
+
+	+	Be specific about the gem version that you are using.
+	
++	Bundler Groups
+	
+	+	Avoid using different multiple techniques for specifying which groups to load for your different Rails environments (development, test, and production).
+	
+	+	When you add groups to your load path, be as specific as possible when you use Bundler.setup to reference a group, or gem within a group.
+	
+		![bundler setup](assets/images/screenshots/bundler_setup.jpg "bundler setup")
+	
++	Published Gems and Local Caching. Cloud Foundry does not yet support package gems that need to be fetched/updated from a git repository, therefore:
+
+	+	Avoid using 'bundle install --local', which enables faster loading of gems from a local cache, but relies on fetching the most recent from a git repository
+	
+	+	Avoid using the ':path => /this/path' in your Gemfile to manually specify a local gem since this will also rely on a fetch from a git repository
+	
++	Special Gemfile references. These types of reference are not yet supported by Cloud Foundry:
+	
+	+	References to git repositories by url
+	
+	+	References to git repositories by name
+	
++	To be most successful with gem dependencies in your application, use published gems.
+
+###Web Application Servers
+
++	Cloud Foundry's cloud and vmc currently supports one web application server for Rails and Sinatra applications, [Thin](http://code.macournoyer.com/thin/).
+
++	By default Rails comes with the default web server, WEBrick.
+
++	To successfully push and start your application to Cloud Foundry's cloud, add Thin as your web server by adding the statement "gem 'thin'" to your Gemfile:
+
+	![gemfile thin](assets/images/screenshots/gemfile_thin.jpg "gemfile thin")
+	
+*Note: Even if your application already requires Thin and you are using Bundler, specifically add it to your gemfile*

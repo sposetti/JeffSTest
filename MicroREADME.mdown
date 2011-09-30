@@ -1,0 +1,51 @@
+#Micro Cloud Foundry 
+
+Micro Cloud Foundry provides the Cloud Foundry as a platform that will run in a single virtual machine. This enables developers to build and test their applications in an environment that mirrors the cloud used for deployment.
+
+Micro Cloud Foundry includes:
+
++	Micro Cloud Foundry VM, which provides the local development environment in a virtual machine
+
++	Micro Cloud services:
+	
+	+	[MySQL](http://dev.mysql.com/) the open relational database.
+	
+	+	[Redis](http://redis.io/) the open source key-value store and data structure server.
+	
+	+	[MongoDB](http://www.mongodb.org/) the open source, document-oriented database.
+
+
+##Prerequisites
+
++	[CloudFoundry.com](http://cloudfoundry.com/) account
+
++	VMware Workstation, Fusion or Player
+
++	Either vmc or [SpringSource Tool Suite](http://www.springsource.com/developer/sts) (STS) installed
+
++	STS Cloud Foundry Plugin Installed (if you are using STS)
+
+*Note: For more information about use and installation of the STS/Eclipse plugin, see "VMware Cloud Foundry for Eclipse and STS."*
+
+##Resource Limitations
+
+Currently the default resource of Micro Cloud Foundry are as follows:
+
+		VM:   1 GB RAM / 8 GB disk
+		Services
+		MySQL:     2 GB disk, max 256 MB per instance
+		MongoDB:   256 MB per instance
+		Redis:     256 MB per instance
+		
+Administrators have the following default limits:
+
+	VMware's Cloud Application Platform
+	For support visit support@cloudfoundry.com
+
+	Target:   http://api.something.cloudfoundry.me (v0.999)
+	Client:   v0.3.12
+
+	User:     admin@something.com
+	Usage:    Memory   (0M of 1.0G total)
+          	Services (2 of 16 total)
+          	Apps     (4 of 16 total)

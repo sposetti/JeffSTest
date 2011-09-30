@@ -1,0 +1,50 @@
+#Cloud Foundry Platform as a Service (PAAS)
+
+Cloud Foundry is the industry's first open platform provided as a service started by VMware. It can support multiple frameworks, cloud providers, and application services on a scalable platform.
+
+There are three main components to Cloud Foundry:
+
++	[CloudFoundry.com]([http://cloudfoundry.com/):	a complete, hosted platform as a service plus tools helpful for managing a cloud application
++	[CloudFoundry.org ](http://cloudfoundry.org/): an open source project where developers and community members can collaborate and contribute to the project
++	 [Cloud Foundry Micro Cloud]([http://cloudfoundry.com/):  a complete instance of the Cloud Foundry platform and tools designed for developers' desktops used in conjunction with VMware Fusion or VMware Player
+
+For technical support, forums and guides, visit the [Cloud Foundry Community](http://support.cloudfoundry.com/home)
+
+##Cloud Foundry PaaS
+ 
+###Scope
+
+Cloud Foundry's Platform as a Service (Paas) includes:
+
++	Self-service application execution environment
++	Automation engine for deploying applications and managing them throughout their lifecycle
++	vmc, a scriptable command line interface
++	Plug-ins for Spring Source's IDE (STS) and Eclipse for development and deployment
++	Open application services interfaces
++	Open cloud provider interfaces
++	Open architecture
+
+###Supported Languages
+
+As of this writing, Cloud Foundry's cloud supports the following frameworks and languages:
+
++	[Spring for Java](http://www.springsource.com/developer/spring)
++	[Ruby on Rails](http://rubyonrails.org/)
++	[Sinatra](http://www.sinatrarb.com/)
++	[Node.js](http://nodejs.org/)
++	JVM (Java Virtual Machine) Frameworks, including [Grails](http://grails.org/)
+
+###Application Services
+
+The following services are supported on Cloud Foundry's cloud:
+
++	[MySQL](http://www.mysql.com/)
++	[MongoDB](http://www.mongodb.org/)
++	[Redis](http://redis.io/)
++	[RabbitMQ](http://www.rabbitmq.com/)
+
+More service are coming in the near future. For the most complete and up to date list, visit [cloudfoundry.com](http://cloudfoundry.com/)
+
+
+  
+
