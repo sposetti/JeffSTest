@@ -5,7 +5,7 @@ This directory contains utilities for generating CloudFormation templates.
 
 1. Install boto
 
-  pip install boto
+    pip install boto
 
 2. Install troposphere
 
